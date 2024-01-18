@@ -3,17 +3,22 @@ use image::RgbImage;
 mod maths;
 use maths::vector3::Vector3;
 mod utils;
-use utils::progressbar::visualise_progress;
-use utils::color::Color;
 use utils::color::write_color;
+use utils::color::Color;
+use utils::progressbar::visualise_progress;
 fn main() {
     // Image
+    let aspect_ratio: f32 = 16.0 / 9.0;
     let image_width: u32 = 1024;
-    let image_height: u32 = 1024;
+    let mut image_height: u32 = (image_width as f32 / aspect_ratio) as u32;
+    if image_height < 1 {
+        image_height = 1;
+    }
+    let viewport_height: f32 = 2.0;
+    let _viewport_width: f32 = viewport_height * (image_width / image_height) as f32;
 
     let v1 = Vector3::new(1.0, 1.0, 1.0);
     println!("{v1}");
-
 
     // Specify the output file path
     let output_file_path = "output/image.png";
@@ -24,7 +29,11 @@ fn main() {
     for j in 0..image_height {
         visualise_progress(j, image_height);
         for i in 0..image_width {
-            let pixel_color = Color::new(i as f32/(image_width-1)as f32 , j as f32/(image_height-1) as f32, 0f32);
+            let pixel_color = Color::new(
+                i as f32 / (image_width - 1) as f32,
+                j as f32 / (image_height - 1) as f32,
+                0f32,
+            );
             write_color(&mut img, pixel_color, i, j);
             /*
             let r = f64::from(i) / f64::from(image_width - 1);
@@ -41,6 +50,7 @@ fn main() {
     }
     println!("\r Finished rendering. {image_height}/{image_height} Lines");
 
-    img.save(output_file_path).expect("Unable to save the image");
+    img.save(output_file_path)
+        .expect("Unable to save the image");
     println!("Image written to {}", output_file_path);
 }

@@ -1,7 +1,7 @@
 // math/Vector3.rs
 
 use std::fmt;
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, Div, Mul, Sub};
 pub struct Vector3 {
     pub x: f32,
     pub y: f32,
@@ -18,6 +18,12 @@ impl Vector3 {
             y: self.z * other.x - self.x * other.z,
             z: self.x * other.y - self.y * other.x,
         }
+    }
+    pub fn length_squared(&self) -> f32 {
+        self.x * self.x + self.y * self.y + self.z * self.z
+    }
+    pub fn length(&self) -> f32 {
+        self.length_squared().sqrt()
     }
 }
 
@@ -60,6 +66,23 @@ impl Mul for Vector3 {
     type Output = f32;
     fn mul(self, other: Vector3) -> f32 {
         self.x * other.x + self.y * other.y + self.z * other.z
+    }
+}
+
+impl Div<f32> for Vector3 {
+    type Output = Vector3;
+
+    fn div(self, t: f32) -> Vector3 {
+        if t != 0.0 {
+            let inv_t = 1.0 / t;
+            Vector3 {
+                x: self.x * inv_t,
+                y: self.y * inv_t,
+                z: self.z * inv_t,
+            }
+        } else {
+            panic!("Tried to divide Vector by 0");
+        }
     }
 }
 
