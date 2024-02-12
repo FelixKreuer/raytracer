@@ -2,6 +2,7 @@
 
 use std::fmt;
 use std::ops::{Add, Div, Mul, Sub};
+#[derive(Debug, Copy, Clone)]
 pub struct Vector3 {
     pub x: f32,
     pub y: f32,
@@ -24,6 +25,13 @@ impl Vector3 {
     }
     pub fn length(&self) -> f32 {
         self.length_squared().sqrt()
+    }
+    pub fn unit_vector(&self) -> Vector3 {
+        *self / self.length()
+    }
+
+    pub fn dot(vec1: &Vector3, other: &Vector3) -> f32 {
+        vec1.x * other.x + vec1.y * other.y + vec1.z * other.z
     }
 }
 
@@ -58,6 +66,17 @@ impl Mul<f32> for Vector3 {
             x: self.x * scalar,
             y: self.y * scalar,
             z: self.z * scalar,
+        }
+    }
+}
+impl Mul<Vector3> for f32 {
+    type Output = Vector3;
+    
+    fn mul(self, vec: Vector3) -> Vector3 {
+        Vector3 {
+            x: self * vec.x,
+            y: self * vec.y,
+            z: self * vec.z,
         }
     }
 }
