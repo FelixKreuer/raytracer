@@ -35,6 +35,7 @@ fn ray_color(r: &Ray) -> Color {
 }
 
 fn main() {
+    // Hallo XYZ
     // Image
 
     let aspect_ratio: f32 = 16.0 / 9.0;
